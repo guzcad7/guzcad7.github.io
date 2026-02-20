@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Registro</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 480px;
+    width: 100%;
+    padding: 40px;
+  }
+  
+  h1 {
+    color: #2d3748;
+    font-size: 28px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  
+  .subtitle {
+    color: #718096;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+  }
+  
+  .form-group {
+    margin-bottom: 24px;
+  }
+  
+  label {
+    display: block;
+    color: #4a5568;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s;
+    font-family: inherit;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
+  .file-upload-wrapper {
+    position: relative;
+    border: 2px dashed #cbd5e0;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s;
+    background: #f7fafc;
+    cursor: pointer;
+  }
+  
+  .file-upload-wrapper:hover {
+    border-color: #667eea;
+    background: #edf2f7;
+  }
+  
+  .file-upload-wrapper.active {
+    border-color: #667eea;
+    background: #e6f2ff;
+  }
+  
+  input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+  }
+  
+  .upload-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+  
+  .upload-text {
+    color: #4a5568;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  
+  .upload-hint {
+    color: #a0aec0;
+    font-size: 12px;
+  }
+  
+  .preview-container {
+    margin-top: 16px;
+    text-align: center;
+  }
+  
+  .preview-image {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .preview-name {
+    margin-top: 8px;
+    color: #4a5568;
+    font-size: 13px;
+  }
+  
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 8px;
+  }
+  
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  }
+  
+  .btn-submit:active {
+    transform: translateY(0);
+  }
+  
+  .btn-submit:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  .error {
+    border-color: #fc8181 !important;
+  }
+  
+  .error-message {
+    color: #e53e3e;
+    font-size: 13px;
+    margin-top: 6px;
+  }
+  
+  .success-message,
+  .loading-message {
+    text-align: center;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .success-message {
+    background: #c6f6d5;
+    color: #22543d;
+    border: 2px solid #48bb78;
+  }
+  
+  .loading-message {
+    background: #bee3f8;
+    color: #2c5282;
+    border: 2px solid #4299e1;
+  }
+  
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #2c5282;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .required {
+    color: #e53e3e;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>📋 Formulario de Registro</h1>
+  <p class="subtitle">Completa tus datos para continuar</p>
+  
+  <div id="successMsg" class="success-message" style="display: none;">
+    ✅ ¡Registro exitoso! Tus datos han sido guardados.
+  </div>
+  
+  <div id="loadingMsg" class="loading-message" style="display: none;">
+    <span class="spinner"></span> Procesando tu información...
+  </div>
+  
+  <form id="registrationForm">
+    <div class="form-group">
+      <label for="nombre">Nombre Completo <span class="required">*</span></label>
+      <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez" required>
+      <div class="error-message" id="nombreError"></div>
+    </div>
+    
+    <div class="form-group">
+      <label for="telefono">Teléfono <span class="required">*</span></label>
+      <input type="tel" id="telefono" name="telefono" placeholder="Ej: +503 7123-4567" required>
+      <div class="error-message" id="telefonoError"></div>
+    </div>
+    
+    <div class="form-group">
+      <label for="correo">Correo Electrónico <span class="required">*</span></label>
+      <input type="email" id="correo" name="correo" placeholder="Ej: correo@ejemplo.com" required>
+      <div class="error-message" id="correoError"></div>
+    </div>
+    
+    <div class="form-group">
+      <label>Foto de Perfil (.jpg) <span class="required">*</span></label>
+      <div class="file-upload-wrapper" id="fileUploadWrapper">
+        <input type="file" id="foto" name="foto" accept=".jpg,.jpeg" required>
+        <div class="upload-icon">📸</div>
+        <div class="upload-text">Haz clic para seleccionar una foto</div>
+        <div class="upload-hint">Solo archivos .jpg (máx. 5 MB)</div>
+      </div>
+      <div class="error-message" id="fotoError"></div>
+      <div class="preview-container" id="previewContainer" style="display: none;">
+        <img id="previewImage" class="preview-image" alt="Vista previa">
+        <div class="preview-name" id="previewName"></div>
+      </div>
+    </div>
+    
+    <button type="submit" class="btn-submit" id="submitBtn">
+      Enviar Registro
+    </button>
+  </form>
+</div>
+
+<script>
+// ⚠️ IMPORTANTE: Reemplaza esta URL con tu webhook de n8n
+const WEBHOOK_URL = 'https://curson8n-n8n.fwfnad.easypanel.host/webhook/registro-formularioUI';
+
+// Preview de la imagen
+const fotoInput = document.getElementById('foto');
+const fileWrapper = document.getElementById('fileUploadWrapper');
+const previewContainer = document.getElementById('previewContainer');
+const previewImage = document.getElementById('previewImage');
+const previewName = document.getElementById('previewName');
+
+// Drag and drop effect
+fileWrapper.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  fileWrapper.classList.add('active');
+});
+
+fileWrapper.addEventListener('dragleave', () => {
+  fileWrapper.classList.remove('active');
+});
+
+fileWrapper.addEventListener('drop', (e) => {
+  e.preventDefault();
+  fileWrapper.classList.remove('active');
+  const files = e.dataTransfer.files;
+  if (files.length > 0) {
+    fotoInput.files = files;
+    handleFileSelect();
+  }
+});
+
+fotoInput.addEventListener('change', handleFileSelect);
+
+function handleFileSelect() {
+  const file = fotoInput.files[0];
+  
+  if (!file) return;
+  
+  // Validar que sea JPG
+  if (!file.type.match('image/jpeg')) {
+    showError('fotoError', 'Por favor selecciona un archivo .jpg');
+    fotoInput.value = '';
+    return;
+  }
+  
+  // Validar tamaño (5 MB)
+  if (file.size > 5 * 1024 * 1024) {
+    showError('fotoError', 'La imagen debe ser menor a 5 MB');
+    fotoInput.value = '';
+    return;
+  }
+  
+  // Mostrar preview
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewImage.src = e.target.result;
+    previewName.textContent = file.name;
+    previewContainer.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  
+  clearError('fotoError');
+}
+
+// Manejo del formulario
+const form = document.getElementById('registrationForm');
+const submitBtn = document.getElementById('submitBtn');
+const successMsg = document.getElementById('successMsg');
+const loadingMsg = document.getElementById('loadingMsg');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  // Limpiar errores previos
+  clearAllErrors();
+  
+  // Validaciones
+  let hasErrors = false;
+  
+  const nombre = document.getElementById('nombre').value.trim();
+  if (!nombre) {
+    showError('nombreError', 'El nombre es requerido');
+    hasErrors = true;
+  }
+  
+  const telefono = document.getElementById('telefono').value.trim();
+  if (!telefono) {
+    showError('telefonoError', 'El teléfono es requerido');
+    hasErrors = true;
+  }
+  
+  const correo = document.getElementById('correo').value.trim();
+  if (!correo || !isValidEmail(correo)) {
+    showError('correoError', 'Ingresa un correo válido');
+    hasErrors = true;
+  }
+  
+  const foto = fotoInput.files[0];
+  if (!foto) {
+    showError('fotoError', 'Debes seleccionar una foto');
+    hasErrors = true;
+  }
+  
+  if (hasErrors) return;
+  
+  // Preparar datos
+  const formData = new FormData();
+  formData.append('nombre', nombre);
+  formData.append('telefono', telefono);
+  formData.append('correo', correo);
+  formData.append('foto', foto);
+  
+  // Enviar
+  try {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+    loadingMsg.style.display = 'block';
+    successMsg.style.display = 'none';
+    
+    const response = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      body: formData
+    });
+    
+    if (!response.ok) {
+      throw new Error('Error al enviar los datos');
+    }
+    
+    // Éxito
+    loadingMsg.style.display = 'none';
+    successMsg.style.display = 'block';
+    form.reset();
+    previewContainer.style.display = 'none';
+    
+    setTimeout(() => {
+      successMsg.style.display = 'none';
+    }, 5000);
+    
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Hubo un error al enviar el formulario. Por favor intenta de nuevo.');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Enviar Registro';
+    loadingMsg.style.display = 'none';
+  }
+});
+
+function showError(elementId, message) {
+  const errorElement = document.getElementById(elementId);
+  const inputElement = document.getElementById(elementId.replace('Error', ''));
+  errorElement.textContent = message;
+  if (inputElement) {
+    inputElement.classList.add('error');
+  }
+}
+
+function clearError(elementId) {
+  const errorElement = document.getElementById(elementId);
+  const inputElement = document.getElementById(elementId.replace('Error', ''));
+  errorElement.textContent = '';
+  if (inputElement) {
+    inputElement.classList.remove('error');
+  }
+}
+
+function clearAllErrors() {
+  ['nombreError', 'telefonoError', 'correoError', 'fotoError'].forEach(clearError);
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+</script>
+
+</body>
+</html>
